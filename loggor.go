@@ -8,11 +8,17 @@ import (
 )
 
 var _filename string
+var _machineName string
+var _logger string
+var _source string
 
 type log struct {
-	Timestamp time.Time `json:"timestamp"`
+	Time time.Time `json:"time"`
 	Message   string    `json:"message"`
 	Level     string    `json:"level"`
+	Logger     string    `json:"logger"`
+	MachineName     string    `json:"machineName"`
+	Source     string    `json:"source"`
 }
 
 // Private methods
@@ -30,9 +36,12 @@ func generic(level string, message string) {
 	check(err)
 	defer f.Close()
 	log := log{
-		Message:   message,
+		Time: time.Now(),
 		Level:     level,
-		Timestamp: time.Now(),
+		Logger:     _logger,
+		MachineName:     _machineName,
+		Source:     _source,
+		Message:   message,
 	}
 	stringlog, err := json.Marshal(log)
 	check(err)
@@ -45,11 +54,14 @@ func generic(level string, message string) {
 //Public methods
 
 //Initialize a loggor instance
-func Initialize(filename string) {
+func Initialize(filename string, source string, machineName string) {
 	if !strings.Contains(filename, ".") {
-		filename += ".log"
+		filename += ".json"
 	}
 	_filename = filename
+	_machineName = machineName
+	_source = source
+	_logger = "Loggor"
 }
 
 //Info prints an info log
