@@ -8,6 +8,7 @@ import (
 )
 
 var _filename string
+var _logBasePath string
 var _machineName string
 var _logger string
 var _source string
@@ -31,7 +32,7 @@ func check(e error) {
 
 func generic(level string, message string) {
 	var err error
-	localfilename := time.Now().Format("20060102") + "_" + _filename
+	localfilename := _logBasePath + time.Now().Format("20060102") + "_" + _filename
 	f, err := os.OpenFile(localfilename, os.O_WRONLY|os.O_CREATE|os.O_APPEND, 0666)
 	check(err)
 	defer f.Close()
@@ -54,10 +55,11 @@ func generic(level string, message string) {
 //Public methods
 
 //Initialize a loggor instance
-func Initialize(filename string, source string, machineName string) {
+func Initialize(logBasePath string, filename string, source string, machineName string) {
 	if !strings.Contains(filename, ".") {
 		filename += ".json"
 	}
+	_logBasePath = logBasePath
 	_filename = filename
 	_machineName = machineName
 	_source = source
