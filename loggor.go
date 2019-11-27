@@ -2,6 +2,7 @@ package loggor
 
 import (
 	"encoding/json"
+	"fmt"
 	"os"
 	"strings"
 	"time"
@@ -14,12 +15,12 @@ var _logger string
 var _source string
 
 type log struct {
-	Time time.Time `json:"time"`
-	Message   string    `json:"message"`
-	Level     string    `json:"level"`
-	Logger     string    `json:"logger"`
-	MachineName     string    `json:"machineName"`
-	Source     string    `json:"source"`
+	Time        time.Time `json:"time"`
+	Message     string    `json:"message"`
+	Level       string    `json:"level"`
+	Logger      string    `json:"logger"`
+	MachineName string    `json:"machineName"`
+	Source      string    `json:"source"`
 }
 
 // Private methods
@@ -37,18 +38,20 @@ func generic(level string, message string) {
 	check(err)
 	defer f.Close()
 	log := log{
-		Time: time.Now(),
-		Level:     level,
-		Logger:     _logger,
-		MachineName:     _machineName,
-		Source:     _source,
-		Message:   message,
+		Time:        time.Now(),
+		Level:       level,
+		Logger:      _logger,
+		MachineName: _machineName,
+		Source:      _source,
+		Message:     message,
 	}
 	stringlog, err := json.Marshal(log)
 	check(err)
 	_, err = f.Write(stringlog)
 	check(err)
 	_, err = f.WriteString("\n")
+	check(err)
+	_, err = fmt.Println(stringlog)
 	check(err)
 }
 
