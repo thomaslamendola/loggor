@@ -51,7 +51,7 @@ func generic(level string, message string) {
 	check(err)
 	_, err = f.WriteString("\n")
 	check(err)
-	_, err = fmt.Println(stringlog)
+	_, err = fmt.Println(string(stringlog[:]))
 	check(err)
 }
 
